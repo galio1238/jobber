@@ -1,26 +1,136 @@
-Personal Info:
-First Name: Nischal
-Last Name: Jain
-Date of birth: 
-Pronouns: He/Him
+personal_info:
+  first_name: Ido
+  last_name: Gal
+  pronouns: he/him
+  location:
+    city: Kfar Hess
+    country: Israel
+  email: gido71200@gmail.com
+  phone: "+972547853854"
+  linkedin: https://www.linkedin.com/in/ido-gal1/
+  languages:
+    - Hebrew (native)
+    - English (fluent)
 
-Email: 
-Expeted Salary: 5000000
-Occupation: Data Engineer
-Address: Indiranagr, Bengaluru
-Phone Number: 
-LinkedIn - https://linkedin.com/in/nischalj10
+education:
+  degree: Bachelor of Science
+  field: Computer Science
+  institution: University of Cincinnati
+  expected_graduation: May 2026
+  gpa: 3.99
+  relevant_coursework:
+    - Data Structures
+    - Python Programming
+    - Linear Algebra
+    - Information Security & Assurance
+    - Deep Learning
+
+professional_profile:
+  current_status: Software Engineering Intern / Computer Science Student
+  total_experience_years: 2-3
+  primary_roles:
+    - Software Engineer
+    - Backend Engineer
+    - Full Stack Engineer
+    - Junior Platform Engineer
+  work_authorization:
+    israel: true
+    usa: true
+  work_mode_preferences:
+    onsite: true
+    hybrid: true
+    remote: true
 
 
-Here are some of my preferences:
-Shopping Preferences: www.amazon.com
-Favorite news source: www.thehindu.com
-Favorite flight booking site to use with every flight related query: https://www.google.com/travel/flightsno
-Resume File to Upload Path = /Users/namanjain/Downloads/DummyResume.pdf
-My best project - checkout headless-ollama on google
+skills:
+  programming_languages:
+    - Python
+    - JavaScript
+    - TypeScript
+    - C++
+    - C#
+  web_development:
+    - HTML
+    - CSS
+    - Angular
+    - React
+    - Node.js
+  databases:
+    - MongoDB
+    - Firestore
+  devops_and_tools:
+    - Git
+    - PM2
+    - Jenkins
+    - Bash
+  cloud_and_platforms:
+    - Firebase
+  operating_systems:
+    - Linux
+    - macOS
 
 
-I am comfortable commuting to office.
-I have 4 years of experience in TypeScript, Node Js, Nextjs.
-I have work authorization for working in the USA.
-I have experience in cloud infrastructure, data warheouses.
+experience:
+  - role: Software Engineering Intern
+    company: Datirium LLC
+    start_date: January 2024
+    end_date: Present
+    responsibilities:
+      - Data migration from MongoDB to Firestore
+      - Angular + TypeScript frontend development
+      - Backend development with Node.js
+      - PM2-based automation and process management
+      - CI/CD with Jenkins
+      - Firestore real-time updates
+      - End-to-end ownership of features
+
+projects:
+  - name: AI-Powered Educational Platform
+    stack:
+      - React
+      - TypeScript
+      - Node.js
+      - MongoDB
+    description: Intelligent tutoring platform with adaptive learning
+
+  - name: Bank Infrastructure System
+    stack:
+      - C++
+    description: Object-oriented banking system with file I/O
+
+  - name: Robotics Automation Project
+    stack:
+      - Python
+    description: LEGO Mindstorms robot automation
+
+resume:
+  auto_upload: true
+  file_name: Gal.Ido.Tech_Resume.pdf 
+  file_path: /home/galio/job/jobber/jobber/user_preferences/Gal.Ido.Tech_Resume.pdf
+
+job_search:
+  target_locations:
+    - Israel
+  preferred_roles:
+    - Software Engineer
+    - Backend Engineer
+    - Full Stack Engineer
+    - Junior Platform Engineer
+  preferred_industries:
+    - Technology
+    - AI / ML
+    - SaaS
+    - Education Technology
+  exclude_roles:
+    - QA
+    - Manual Testing
+    - IT Support
+
+automation_rules:
+  auto_fill_forms: true
+  auto_upload_resume: true
+  generate_cover_letter: true
+  tailor_resume_per_role: true
+  prioritize_israeli_companies: true
+  allow_startups: true
+  avoid_duplicate_applications: true

@@ -9,9 +9,19 @@ from typing import Any, Dict, List, Optional, Union
 from dotenv import load_dotenv
 from nltk.tokenize import word_tokenize  # type: ignore
 from openai import OpenAI
+import anthropic
 
 load_dotenv()
-client = OpenAI()
+
+# Initialize clients based on available API keys
+openai_client = None
+anthropic_client = None
+
+if os.getenv("OPENAI_API_KEY"):
+    openai_client = OpenAI()
+
+if os.getenv("ANTHROPIC_API_KEY"):
+    anthropic_client = anthropic.Anthropic()
 
 
 def llm_fuzzy_match(pred: str, reference: str, question: str) -> float:
@@ -114,9 +124,9 @@ def generate_from_openai_chat_completion(
     stop_token: Optional[str] = None,
 ) -> str:
     """
-    Generates a response from OpenAI's chat completions based on a conversation constructed from a List of messages.
+    Generates a response from OpenAI or Anthropic chat completions based on a conversation constructed from a List of messages.
 
-    This function makes a call to the OpenAI API using specified parameters to control the generation.
+    This function makes a call to the OpenAI or Anthropic API using specified parameters to control the generation.
     It requires an API key to be set in the environment variables.
 
     Parameters:
@@ -132,26 +142,68 @@ def generate_from_openai_chat_completion(
         str: The generated response as a string.
 
     Raises:
-        ValueError: If the 'OPENAI_API_KEY' environment variable is not set.
+        ValueError: If neither 'OPENAI_API_KEY' nor 'ANTHROPIC_API_KEY' environment variable is set.
     """
-    if "OPENAI_API_KEY" not in os.environ:
-        raise ValueError(
-            "OPENAI_API_KEY environment variable must be set when using OpenAI API."
-        )
-    client.api_key = os.environ["OPENAI_API_KEY"]
-    client.organization = os.environ.get("OPENAI_ORGANIZATION", "")
+    # Check if model is an Anthropic model
+    is_anthropic = model.startswith("claude")
+    
+    if is_anthropic:
+        if not anthropic_client:
+            raise ValueError(
+                "ANTHROPIC_API_KEY environment variable must be set when using Anthropic API."
+            )
+        
+        # Convert OpenAI format messages to Anthropic format
+        anthropic_messages = []
+        system_message = None
+        
+        for msg in messages:
+            if msg["role"] == "system":
+                system_message = msg["content"]
+            else:
+                anthropic_messages.append({
+                    "role": msg["role"],
+                    "content": msg["content"]
+                })
+        
+        # Create Anthropic request
+        kwargs = {
+            "model": model,
+            "max_tokens": max_tokens,
+            "messages": anthropic_messages,
+            "temperature": temperature,
+            "top_p": top_p,
+        }
+        
+        if system_message:
+            kwargs["system"] = system_message
+        
+        if stop_token:
+            kwargs["stop_sequences"] = [stop_token]
+        
+        response = anthropic_client.messages.create(**kwargs)
+        answer: str = response.content[0].text
+        return answer
+    else:
+        if not openai_client:
+            raise ValueError(
+                "OPENAI_API_KEY environment variable must be set when using OpenAI API."
+            )
+        
+        openai_client.api_key = os.environ["OPENAI_API_KEY"]
+        openai_client.organization = os.environ.get("OPENAI_ORGANIZATION", "")
 
-    response = client.chat.completions.create(
-        model=model,
-        messages=messages,  # type: ignore
-        temperature=temperature,
-        max_tokens=max_tokens,
-        top_p=top_p,
-        n=1,
-        stop=[stop_token] if stop_token else None,
-    )
-    answer: str = response.choices[0].message.content  # type: ignore
-    return answer
+        response = openai_client.chat.completions.create(
+            model=model,
+            messages=messages,  # type: ignore
+            temperature=temperature,
+            max_tokens=max_tokens,
+            top_p=top_p,
+            n=1,
+            stop=[stop_token] if stop_token else None,
+        )
+        answer: str = response.choices[0].message.content  # type: ignore
+        return answer
 
 
 def clean_answer(answer: str) -> str:

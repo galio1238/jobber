@@ -3,6 +3,7 @@ from typing import Any, Callable, Dict, List, Optional, Tuple
 
 import litellm
 import openai
+import anthropic
 from dotenv import load_dotenv
 
 from jobber.core.skills.get_screenshot import get_screenshot
@@ -22,7 +23,7 @@ class BaseAgent:
         self.messages = [{"role": "system", "content": system_prompt}]
         self.tools_list = []
         self.executable_functions_list = {}
-        self.llm_config = {"model": "gpt-4o-mini"}
+        self.llm_config = {"model": "anthropic/claude-3-5-sonnet-20241022"}
         if tools:
             self._initialize_tools(tools)
             self.llm_config.update({"tools": self.tools_list, "tool_choice": "auto"})
@@ -53,9 +54,14 @@ class BaseAgent:
                         "run_name": f"{self.name}Run",
                     },
                 )
-            except openai.BadRequestError as e:
-                should_retry = litellm._should_retry(e.status_code)
-                print(f"should_retry: {should_retry}")
+            except Exception as e:
+                logger.error(f"LiteLLM API call failed: {str(e)}")
+                if hasattr(e, 'status_code'):
+                    should_retry = litellm._should_retry(e.status_code)
+                    print(f"Error status_code: {e.status_code}, should_retry: {should_retry}")
+                    if should_retry:
+                        continue
+                raise
 
             response_message = response.choices[0].message
             tool_calls = response_message.tool_calls
